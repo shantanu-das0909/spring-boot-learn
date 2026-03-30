@@ -3,8 +3,12 @@ package com.example.common.practice.modules.order.service;
 import com.example.common.practice.modules.order.dto.AllOrdersDto;
 import com.example.common.practice.modules.order.dto.CreateOrderRequestDto;
 import com.example.common.practice.modules.order.dto.OrderResponseDto;
+import com.example.common.practice.modules.order.dto.UpdateOrderRequestDto;
 import com.example.common.practice.modules.order.entity.Order;
 import com.example.common.practice.modules.order.repo.OrderRepo;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +38,7 @@ public class OrderService {
                 .orders(allOrders).build();
     }
 
+    @Cacheable(value = "userData", key = "#id")
     public OrderResponseDto getOrderById(int id) {
         OrderResponseDto orderResponseDto = null;
         Optional<Order> optionalOrder = orderRepo.findById(id);
@@ -42,5 +47,28 @@ public class OrderService {
                     .order(optionalOrder.get()).build();
         }
         return orderResponseDto;
+    }
+
+    @CachePut(value = "userData", key = "#id")
+    public OrderResponseDto updateOrder(int id, UpdateOrderRequestDto updateOrderRequestDto) {
+        Optional<Order> optionalOrder = orderRepo.findById(id);
+        optionalOrder.orElseThrow(() -> new RuntimeException("Order not found with id " + id));
+        Order order = optionalOrder.get();
+        order.setProductName(updateOrderRequestDto.getProductName());
+        order.setPrice(updateOrderRequestDto.getPrice());
+        order.setAddress(updateOrderRequestDto.getAddress());
+
+        Order savedOrder = orderRepo.save(order);
+        return OrderResponseDto.builder()
+                .order(savedOrder).build();
+    }
+
+    @CacheEvict(value = "userData", key = "#id")
+    public String deleteOrder(int id) {
+        Optional<Order> optionalOrder = orderRepo.findById(id);
+        optionalOrder.orElseThrow(() -> new RuntimeException("Order not found with id " + id));
+        Order order = optionalOrder.get();
+        orderRepo.delete(order);
+        return "Success";
     }
 }
