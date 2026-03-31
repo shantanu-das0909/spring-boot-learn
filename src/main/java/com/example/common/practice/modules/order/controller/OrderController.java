@@ -23,22 +23,22 @@ public class OrderController {
     private CacheInspectionService cacheInspectionService;
 
     @PostMapping("/create")
-    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody CreateOrderRequestDto createOrderRequestDto) {
+    public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequestDto createOrderRequestDto) {
         return ResponseEntity.ok().body(orderService.createOrder(createOrderRequestDto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable int id) {
+    public ResponseEntity<?> getOrderById(@PathVariable int id) {
         return ResponseEntity.ok().body(orderService.getOrderById(id));
     }
 
     @GetMapping
-    public ResponseEntity<AllOrdersDto> getAllOrders() {
+    public ResponseEntity<?> getAllOrders() {
         return ResponseEntity.ok().body(orderService.getAllOrders());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderResponseDto> updateOrder(
+    public ResponseEntity<?> updateOrder(
             @RequestBody UpdateOrderRequestDto updateOrderRequestDto,
             @PathVariable int id
     ) {
@@ -46,7 +46,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteOrder(@PathVariable int id){
+    public ResponseEntity<?> deleteOrder(@PathVariable int id){
         orderService.deleteOrder(id);
         return ResponseEntity.ok().body("Success");
     }
