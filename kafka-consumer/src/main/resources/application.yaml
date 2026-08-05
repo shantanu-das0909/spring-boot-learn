@@ -1,0 +1,22 @@
+server:
+  port: 9292
+spring:
+  application:
+    name: kafka-consumer
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      properties:
+        spring.json.type.mapping: customer:com.kafka.consumer.dto.Customer
+    consumer:
+      group-id: error-handler-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      properties:
+#        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+#        spring.json.value.default.type: com.kafka.consumer.dto.*
+#        spring.json.use.type.headers: false
+        spring.json.type.mapping: customer:com.kafka.consumer.dto.Customer
+        spring.json.trusted.packages: com.kafka.consumer.dto

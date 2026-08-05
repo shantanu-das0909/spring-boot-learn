@@ -1,0 +1,17 @@
+
+spring:
+  application:
+    name: kafka-consumer
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      properties:
+        spring.json.type.mapping: customer:com.kafka.consumer.dto.Customer
+    consumer:
+      group-id: route-topic-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      properties:
+        spring.json.type.mapping: customer:com.kafka.consumer.dto.Customer
+        spring.json.trusted.packages: com.kafka.consumer.dto

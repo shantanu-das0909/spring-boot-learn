@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: kafka-producer
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      properties:
+        spring.json.type.mapping: customer:com.kafka.producer.dto.Customer
